@@ -81,12 +81,13 @@ function Editor({close, id}: EditorProps) {
   useEffect(async () => {
     const localPosts = await getLocalPosts();
     if (trix.current) {
-      isSyncingValue.current = true;
-      trix.current.value = currentPost
-        ? localPosts[currentPost.id_].content
-        : "";
+      const nextValue = currentPost ? localPosts[currentPost.id_].content : "";
+      if (trix.current.value !== nextValue) {
+        isSyncingValue.current = true;
+        trix.current.value = nextValue;
+      }
     }
-  }, [id]);
+  }, [postMetadata, id]);
   async function handleDelete() {
     await deletePost(id);
     redirect("/app");

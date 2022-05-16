@@ -79,6 +79,7 @@ function Editor({close, id}: EditorProps) {
     return () => window.removeEventListener(listenerKey, listener);
   }, [id]);
 
+  const memoizedPostMeta = useMemo(() => postMetadata, []);
   useEffect(async () => {
     const localPosts = await getLocalPosts();
     if (trix.current) {
@@ -88,7 +89,7 @@ function Editor({close, id}: EditorProps) {
         trix.current.value = nextValue;
       }
     }
-  }, [postMetadata, id]);
+  }, [memoizedPostMeta, id]);
   async function handleDelete() {
     await deletePost(id);
     redirect("/app");

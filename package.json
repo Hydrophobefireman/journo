@@ -1,0 +1,16 @@
+{
+  "name": "journo",
+  "version": "1.0.0",
+  "description": "Tracker monorepo",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "author": "Hydrophobefireman",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "husky": "^7.0.4",
+    "typescript": "^4.6.2"
+  }
+}

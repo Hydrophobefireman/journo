@@ -57,6 +57,7 @@ export function Auth() {
     }
     const {error} = await client.login(user, pass).result;
     if (error) {
+      setFormState("idle");
       return persist({
         content: error,
         cancelText: "Okay",

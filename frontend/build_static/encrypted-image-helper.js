@@ -55,7 +55,6 @@ function decryptImage(url, client) {
     const code = `decryption-job:${id}:${Math.random()}`;
 
     const listener = async (ev) => {
-      if (ev.data?.code !== code) return;
       listenerMap.delete(code);
       return resolve({decryptedImage: ev.data.decryptedBuffer, ct: ev.data.ct});
     };

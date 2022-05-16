@@ -19,6 +19,7 @@ function fileToArrayBuffer(blob: Blob | File): Promise<ArrayBuffer> {
 }
 
 export async function uploadImage(img: File) {
+  if (!img) return;
   const buf = await (img.arrayBuffer
     ? img.arrayBuffer()
     : fileToArrayBuffer(img));

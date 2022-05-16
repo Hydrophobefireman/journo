@@ -139,7 +139,7 @@ export default function App() {
     // refresh times
     rerender();
   }, 60_000);
-  console.log("hi");
+
   if (!isLoaded) return;
 
   return (

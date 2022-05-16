@@ -11,9 +11,11 @@ import {Router} from "./_router";
 import {DelayedRender} from "./components/DelayedRender";
 import {useCachedAuth} from "./hooks/use-cached-auth";
 import {timeError} from "./store/time-error";
+import {sw} from "./sw";
 
 import("./ext/trix.css");
 import("./ext/trix");
+sw();
 
 function AppLoader() {
   const [, , synced] = useCachedAuth();

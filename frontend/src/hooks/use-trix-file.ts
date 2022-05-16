@@ -6,6 +6,7 @@ export function useTrixFile() {
   const {persist} = useAlerts();
   useMount(() => {
     const listener = async (event: any) => {
+      if (!event.attachment.file) return;
       const {data, error} = await uploadImage(event.attachment.file);
       if (error) {
         return persist({content: error, actionText: "Okay"});

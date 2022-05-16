@@ -5,7 +5,8 @@ export function sw() {
     window.addEventListener("load", async () => {
       try {
         const registration = await navigator.serviceWorker.register(
-          "/service-worker.js"
+          "/service-worker.js",
+          {updateViaCache: "none"}
         );
         initListener();
         console.log("SW registered: ", registration);

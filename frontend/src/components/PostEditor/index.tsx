@@ -16,6 +16,7 @@ import {TrashIcon, XCircleIcon} from "@hydrophobefireman/kit/icons";
 import {Input} from "@hydrophobefireman/kit/input";
 import {Text} from "@hydrophobefireman/kit/text";
 import {
+  A,
   loadURL,
   redirect,
   useEffect,
@@ -93,7 +94,14 @@ function Editor({close, id}: EditorProps) {
     redirect("/app");
   }
   if (!currentPost && postMetadata.isLoaded)
-    return <div class={modalRoot}>Note not found</div>;
+    return (
+      <div class={modalRoot}>
+        Note not found
+        <div>
+          <A href="/app">Go back</A>
+        </div>
+      </div>
+    );
   if (!currentPost) return <div class={modalRoot}>Fetching...</div>;
   return (
     <Form>

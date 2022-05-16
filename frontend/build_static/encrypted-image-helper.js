@@ -36,7 +36,7 @@ function baseListener({data}) {
   if (!code) return;
   const listener = listenerMap.get(code);
   if (listener) {
-    listener();
+    listener({data});
   }
 }
 self.addEventListener("message", baseListener);

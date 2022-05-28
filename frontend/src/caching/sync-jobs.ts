@@ -8,7 +8,7 @@ import {
   postFetcher,
   updatePost,
 } from "@/handlers/posts";
-import {postMetadataStore} from "@/store/posts";
+import {postMetadataStore, serverSyncTimeStampStore} from "@/store/posts";
 import {timeError} from "@/store/time-error";
 import {must} from "@/util/must";
 import {time} from "@/util/time";
@@ -79,6 +79,7 @@ export class SyncJob {
       });
       await this.pushToIdb(localPosts);
     }
+    set(serverSyncTimeStampStore, +new Date());
   }
   async pushToIdb(localPosts: Record<string, DecryptedPost>) {
     await idbset(postsKey, localPosts);

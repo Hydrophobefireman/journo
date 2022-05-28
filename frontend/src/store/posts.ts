@@ -6,3 +6,7 @@ export const postMetadataStore = createState<{
   posts: Record<string, DecryptedPostMetadata>;
   isLoaded: boolean;
 }>({name: "posts"});
+
+export const serverSyncTimeStampStore = createState<number>({
+  name: "serverSyncTimeStamp",
+});

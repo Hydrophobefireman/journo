@@ -22,33 +22,29 @@ import {Text} from "@hydrophobefireman/kit/text";
 import {loadURL, useEffect, useMemo, useState} from "@hydrophobefireman/ui-lib";
 
 const rtf =
-  typeof Intl !== "undefined"
-    ? new Intl.RelativeTimeFormat("en")
-    : {format: (x: any) => x};
-function timeDifference(timestamp: number) {
-  const sPerMinute = 60;
-  const sPerHour = sPerMinute * 60;
-  const msPerDay = sPerHour * 24;
-  const sPerMonth = msPerDay * 30;
-  const sPerYear = msPerDay * 365;
+  typeof Intl !== "undefined" ? new Intl.RelativeTimeFormat("en") : null;
+const timeDifference = rtf
+  ? function timeDifference(timestamp: number) {
+      const sPerMinute = 60;
+      const sPerHour = sPerMinute * 60;
+      const msPerDay = sPerHour * 24;
 
-  const current = time();
-  const elapsed = current - timestamp;
+      const current = time();
+      const elapsed = current - timestamp;
 
-  if (elapsed < sPerMinute) {
-    return rtf.format(-Math.floor(elapsed), "seconds");
-  } else if (elapsed < sPerHour) {
-    return rtf.format(-Math.floor(elapsed / sPerMinute), "minutes");
-  } else if (elapsed < msPerDay) {
-    return rtf.format(-Math.floor(elapsed / sPerHour), "hours");
-  } else if (elapsed < sPerMonth) {
-    return rtf.format(-Math.floor(elapsed / sPerMonth), "months");
-  } else if (elapsed < sPerYear) {
-    return rtf.format(-Math.floor(elapsed / sPerYear), "years");
-  } else {
-    return new Date(timestamp).toLocaleDateString();
-  }
-}
+      if (elapsed < sPerMinute) {
+        return rtf.format(-Math.floor(elapsed), "seconds");
+      } else if (elapsed < sPerHour) {
+        return rtf.format(-Math.floor(elapsed / sPerMinute), "minutes");
+      } else if (elapsed < msPerDay) {
+        return rtf.format(-Math.floor(elapsed / sPerHour), "hours");
+      } else {
+        return rtf.format(-Math.floor(elapsed / msPerDay), "days");
+      }
+    }
+  : function timeDifference(timestamp: number) {
+      return new Date(timestamp).toLocaleDateString();
+    };
 
 const postLink = css({
   //@ts-ignore
@@ -152,6 +148,7 @@ export default function App() {
         <Box class={css({marginTop: "1rem"})}>
           {
             <Button
+              prefix={<PlusCircleIcon color="white" />}
               onClick={createPost}
               mode="secondary"
               variant="custom"
@@ -167,7 +164,6 @@ export default function App() {
                 height: "3rem",
               })}
             >
-              <PlusCircleIcon color="white" />
               <span
                 class={css({
                   fontWeight: "bold",

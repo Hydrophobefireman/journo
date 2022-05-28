@@ -7,7 +7,7 @@ import {getLocalPosts} from "@/caching/keys";
 import {SyncJob} from "@/caching/sync-jobs";
 import {deletePost} from "@/handlers/posts";
 import {useTrixFile} from "@/hooks/use-trix-file";
-import {postMetadataStore} from "@/store/posts";
+import {postMetadataStore, serverSyncTimeStampStore} from "@/store/posts";
 import {buildPortal} from "@hydrophobefireman/kit/build-portal";
 import {Button} from "@hydrophobefireman/kit/button";
 import {Box} from "@hydrophobefireman/kit/container";
@@ -22,7 +22,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "@hydrophobefireman/ui-lib";
 
 import {Form} from "../Form";
@@ -46,7 +45,10 @@ export interface EditorProps {
   id: string;
 }
 
+const win: any = window;
+win.__PostEditorRenderCount = 0;
 function Editor({close, id}: EditorProps) {
+  win.__PostEditorRenderCount++;
   const trix = useRef<any>();
 
   // usePostMetadataUpdate(title, post);
@@ -55,7 +57,7 @@ function Editor({close, id}: EditorProps) {
     []
   );
   const [postMetadata] = useSharedState(postMetadataStore);
-
+  const [serverSyncTs] = useSharedState(serverSyncTimeStampStore);
   const currentPost = postMetadata?.posts?.[id];
   const postUpdater = usePostUpdater();
   const isSyncingValue = useRef(false);
@@ -79,7 +81,6 @@ function Editor({close, id}: EditorProps) {
     return () => window.removeEventListener(listenerKey, listener);
   }, [id]);
 
-  const memoizedPostMeta = useMemo(() => postMetadata, []);
   useEffect(async () => {
     const localPosts = await getLocalPosts();
     if (trix.current) {
@@ -89,7 +90,8 @@ function Editor({close, id}: EditorProps) {
         trix.current.value = nextValue;
       }
     }
-  }, [memoizedPostMeta, id]);
+  }, [id, serverSyncTs]);
+
   async function handleDelete() {
     await deletePost(id);
     redirect("/app");
@@ -97,9 +99,11 @@ function Editor({close, id}: EditorProps) {
   if (!currentPost && postMetadata.isLoaded)
     return (
       <div class={modalRoot}>
-        Note not found
         <div>
-          <A href="/app">Go back</A>
+          <div>Note not found</div>
+          <div>
+            <A href="/app">Go back</A>
+          </div>
         </div>
       </div>
     );

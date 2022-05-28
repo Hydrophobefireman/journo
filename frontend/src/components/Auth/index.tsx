@@ -3,7 +3,6 @@ import {css} from "catom";
 import {savePwd} from "@/crypto/util";
 import {register} from "@/handlers/auth";
 import {useIsCachedLoggedIn} from "@/hooks/use-cached-auth";
-import {useIsLoggedIn} from "@/util/auth";
 import {client} from "@/util/bridge";
 import {Box} from "@hydrophobefireman/kit/container";
 import {Input} from "@hydrophobefireman/kit/input";

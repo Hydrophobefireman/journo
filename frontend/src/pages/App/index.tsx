@@ -20,6 +20,7 @@ import {
 import {DocumentTextIcon, PlusCircleIcon} from "@hydrophobefireman/kit/icons";
 import {Text} from "@hydrophobefireman/kit/text";
 import {loadURL, useEffect, useMemo, useState} from "@hydrophobefireman/ui-lib";
+import {Select, SelectOptions} from "@kit/select";
 
 const rtf =
   typeof Intl !== "undefined" ? new Intl.RelativeTimeFormat("en") : null;
@@ -82,7 +83,7 @@ const postLink = css({
     },
   },
 });
-
+const selectOptions = [{value: "Newest"}, {value: "Oldest"}] as const;
 export default function App() {
   useAuthGuard.cached("/app");
   const [obj] = useCachedAuth();
@@ -91,7 +92,8 @@ export default function App() {
   const {qs} = useLocation();
   const params = useMemo(() => new URLSearchParams(qs), [qs]);
   const [editing, setEditing] = useState(() => params.has("post"));
-
+  const [sortMode, setSortMode] =
+    useState<typeof selectOptions[number]["value"]>("Newest");
   async function syncContent() {
     // if (params.has("post")) return;
     const job = new SyncJob("server-sync");
@@ -126,9 +128,9 @@ export default function App() {
     () =>
       posts &&
       Object.values(posts).sort((a, b) => {
-        return b.created_at - a.created_at;
+        return (sortMode === "Newest" ? 1 : -1) * (b.created_at - a.created_at);
       }),
-    [posts]
+    [posts, sortMode]
   );
   const rerender = useRerender();
   useInterval(() => {
@@ -145,6 +147,15 @@ export default function App() {
         <Text.h1 class={css({fontWeight: "bold", fontSize: "2rem"})}>
           My Journals
         </Text.h1>
+        <Box horizontal="right" class={css({width: "95%"})}>
+          <Select
+            buttonClass={css({width: "100px"})}
+            value={sortMode}
+            setValue={setSortMode as any}
+            options={selectOptions as any as SelectOptions[]}
+            label="Sort"
+          />
+        </Box>
         <Box class={css({marginTop: "1rem"})}>
           {
             <Button

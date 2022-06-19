@@ -12,11 +12,13 @@ export const useCachedAuth = () => {
   const [isSynced, setSynced] = useState(false);
   useMount(async () => {
     if ((await isOnline()) && !v) {
-      client.syncWithServer().then(() => setSynced(true));
+      await client.syncWithServer();
+      setSynced(true);
+    } else {
+      const info = await get(authStateKey);
+      if (info) setV(info as any);
+      setSynced(true);
     }
-    const info = await get(authStateKey);
-    if (info) setV(info as any);
-    setSynced(true);
   });
   useEffect(() => {
     if (isSynced) set(authStateKey, v);

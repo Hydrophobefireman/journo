@@ -27,14 +27,16 @@ export class SyncJob {
       syncIdbOnPostUpdate: false,
     }
   ) {}
-  async _serverSync() {
-    clearTimeout(_prevJob);
+  async fetchLocalPostsFromIDB(): Promise<Record<string, DecryptedPost>> {
     let localPosts = await getLocalPosts();
     const onlyMeta = createPostMetadata(localPosts);
     set(postMetadataStore, {posts: onlyMeta, isLoaded: true});
+    return localPosts;
+  }
+  async _serverSync() {
+    clearTimeout(_prevJob);
 
     const resp = postFetcher();
-
     const {data: remotePosts, error} = await resp.result;
     const serverTime = +(await resp.headers).get("x-time-stamp");
     const currTime = time();
@@ -42,7 +44,7 @@ export class SyncJob {
       console.log(serverTime, currTime);
       return set(timeError, serverTime > currTime ? "behind" : "ahead");
     }
-
+    let localPosts = await this.fetchLocalPostsFromIDB();
     await this._syncLocal(localPosts, remotePosts);
 
     must(error);
@@ -57,6 +59,7 @@ export class SyncJob {
             if (localObject.flags.is_pending_deletion) return;
             // server wins if it has new content
             // otherwise local wins
+
             if (serverObject.updated_at > localObject.updated_at) {
               const content = await fetchPostContent(key).result;
               localPosts[key] = {...serverObject, content};

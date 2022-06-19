@@ -19,8 +19,8 @@ sw();
 
 function AppLoader() {
   const [, , synced] = useCachedAuth();
-  return <App />;
-  // return <DelayedRender time={1000}>Loading...</DelayedRender>;
+  if (synced) return <App />;
+  return <DelayedRender time={1000}>Loading...</DelayedRender>;
 }
 function App() {
   const hasError = useSharedStateValue(timeError);

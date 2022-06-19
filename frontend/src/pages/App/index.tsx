@@ -9,7 +9,7 @@ import {PostEditor} from "@/components/PostEditor";
 import {useAuthGuard} from "@/hooks/use-auth-guard";
 import {useCachedAuth} from "@/hooks/use-cached-auth";
 import {postMetadataStore} from "@/store/posts";
-import {timeDifference} from "@/util/time-difference";
+import {time} from "@/util/time";
 import {Button} from "@hydrophobefireman/kit/button";
 import {Box} from "@hydrophobefireman/kit/container";
 import {
@@ -21,6 +21,31 @@ import {DocumentTextIcon, PlusCircleIcon} from "@hydrophobefireman/kit/icons";
 import {Text} from "@hydrophobefireman/kit/text";
 import {loadURL, useEffect, useMemo, useState} from "@hydrophobefireman/ui-lib";
 import {Select, SelectOptions} from "@kit/select";
+
+const rtf =
+  typeof Intl !== "undefined" ? new Intl.RelativeTimeFormat("en") : null;
+const timeDifference = rtf
+  ? function timeDifference(timestamp: number) {
+      const sPerMinute = 60;
+      const sPerHour = sPerMinute * 60;
+      const msPerDay = sPerHour * 24;
+
+      const current = time();
+      const elapsed = current - timestamp;
+
+      if (elapsed < sPerMinute) {
+        return rtf.format(-Math.floor(elapsed), "seconds");
+      } else if (elapsed < sPerHour) {
+        return rtf.format(-Math.floor(elapsed / sPerMinute), "minutes");
+      } else if (elapsed < msPerDay) {
+        return rtf.format(-Math.floor(elapsed / sPerHour), "hours");
+      } else {
+        return rtf.format(-Math.floor(elapsed / msPerDay), "days");
+      }
+    }
+  : function timeDifference(timestamp: number) {
+      return new Date(timestamp).toLocaleDateString();
+    };
 
 const postLink = css({
   //@ts-ignore
@@ -72,7 +97,6 @@ export default function App() {
   async function syncContent() {
     // if (params.has("post")) return;
     const job = new SyncJob("server-sync");
-    job.fetchLocalPostsFromIDB();
     job.sync();
   }
   useEffect(syncContent, [params]);

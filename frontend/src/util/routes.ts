@@ -1,6 +1,6 @@
 const BASE = location.href.includes("localhost")
   ? "http://localhost:5000"
-  : "https://journo-api.hpfm.dev/";
+  : "https://journo.fly.dev/";
 
 function getURL(path: string) {
   return new URL(path, BASE).href;

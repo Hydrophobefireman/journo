@@ -13,7 +13,7 @@ function random() {
     if ("randomUUID" in crypto)
       return `${PENDING_POST_KEY_PREFIX + crypto.randomUUID()}`;
 
-    return `${PENDING_POST_KEY_PREFIX}${crypto
+    return `${PENDING_POST_KEY_PREFIX}${(crypto as Crypto)
       .getRandomValues(new Uint8Array(10))
       .join("-")}`;
   }

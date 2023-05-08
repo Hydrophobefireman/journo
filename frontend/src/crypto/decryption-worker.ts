@@ -35,6 +35,9 @@ async function decryptImage({
 }) {
   const pwd: string = await get(pswKey);
   const resp = await decrypt({encryptedBuf: buffer, meta}, pwd);
+  if ("error" in resp) {
+    return;
+  }
   reg.active.postMessage(
     {
       code,

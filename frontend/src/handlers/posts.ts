@@ -52,6 +52,10 @@ export function postFetcher() {
     }),
   };
 }
+function assert_decrypt(x: ArrayBuffer | {error: string}): ArrayBuffer {
+  if ("error" in x) throw new Error();
+  return x;
+}
 export function fetchPostContent(id: string) {
   const {controller, headers, result} = requests.getBinary(
     postContentRoute(id)
@@ -64,12 +68,14 @@ export function fetchPostContent(id: string) {
         throw new Error(val.error);
       const pass = await getPasswd();
       return textDecoder.decode(
-        await decrypt(
-          {
-            encryptedBuf: val,
-            meta: (await headers).get("x-meta-data"),
-          },
-          pass
+        assert_decrypt(
+          await decrypt(
+            {
+              encryptedBuf: val,
+              meta: (await headers).get("x-meta-data"),
+            },
+            pass
+          )
         )
       );
     }),

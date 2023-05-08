@@ -1,16 +1,6 @@
-from os import environ, getcwd
-from os.path import join, isfile
-from json import load
-
-_CONFIG_PATH = join(getcwd(), ".env.json")
-
-
 def setup_env() -> None:
-    if isfile(_CONFIG_PATH):
-        with open(_CONFIG_PATH, "r") as f:
-            js: dict = load(f)
-            environ.update(js)
+    import dotenv
+    from os.path import join
+    from os import getcwd
 
-
-del join
-del getcwd
+    dotenv.load_dotenv(join(getcwd(), ".env"))

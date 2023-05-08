@@ -18,6 +18,7 @@ REFRESH_TOKEN_SALT = environ.get("REFRESH_TOKEN_SALT")
 DISABLE_CACHING = environ.get("DISABLE_CACHING") is not None
 CLOUDINARY_SECRET = environ.get("CLOUDINARY_SECRET")
 CLOUDINARY_API_KEY = environ.get("CLOUDINARY_API_KEY")
+IDLE_TIMEOUT = int(environ.get("DIDLE_TIMEOUT", 60 * 10))
 try:
     CACHE_DIR = Path(gettempdir(), "@cache").resolve()
     CACHE_DIR.mkdir(exist_ok=True)

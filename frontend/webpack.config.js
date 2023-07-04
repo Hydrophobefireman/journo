@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HTMLInlineCSSWebpackPlugin =
   require("html-inline-css-webpack-plugin").default;
+const webpack = require("webpack");
+
 const WebpackModuleNoModulePlugin = require("@hydrophobefireman/module-nomodule");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const {autoPrefixCSS} = require("catom/dist/css");
@@ -15,6 +17,7 @@ const WorkboxPlugin = require("workbox-webpack-plugin");
 const mode = process.env.NODE_ENV;
 const isProd = mode === "production";
 const {outputDir, staticFilePrefix, inlineCSS, enableCatom, fonts} = uiConfig;
+require("dotenv").config();
 const browserslistConfig = browserslistToTargets(
   browserslist("last 2 versions")
 );
@@ -198,6 +201,11 @@ function getCfg(isLegacy) {
         mode: isLegacy ? "legacy" : "modern",
         fonts,
       }),
+      new webpack.EnvironmentPlugin([
+        "NODE_ENV",
+        "API_ENDPOINT_DEV",
+        "API_ENDPOINT_PROD",
+      ]),
     ].filter(Boolean),
   };
 }

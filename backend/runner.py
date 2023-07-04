@@ -4,7 +4,7 @@ setup_env()
 
 
 from app.main import app as core_app
-
+from app.db import db
 
 def run_coreserver():
     core_app.run(debug=True, port=5000)
@@ -12,5 +12,4 @@ def run_coreserver():
 
 if __name__ == "__main__":
     from sys import argv
-
     run_coreserver()

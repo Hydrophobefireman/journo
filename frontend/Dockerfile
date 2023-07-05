@@ -30,4 +30,4 @@ COPY --from=builder /app/build .
 EXPOSE 80
 COPY Caddyfile Caddyfile
 # Start the Caddy server
-CMD ["caddy", "file-server", "--root", "/site", "--listen", "0.0.0.0:80"]
+CMD ["caddy"]

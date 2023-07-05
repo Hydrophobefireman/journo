@@ -28,6 +28,6 @@ COPY --from=builder /app/build .
 
 # Expose port 80
 EXPOSE 80
-
+COPY Caddyfile Caddyfile
 # Start the Caddy server
 CMD ["caddy", "file-server", "--root", "/site", "--listen", "0.0.0.0:80"]

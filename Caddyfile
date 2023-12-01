@@ -8,5 +8,4 @@
 :4000 {
 	encode gzip
 	reverse_proxy http://localhost:8080
-	
 }

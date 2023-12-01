@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 127.0.0.1:11000:80
-      - 127.0.0.1:11001:8080
+      - 127.0.0.1:11001:4000
     env_file:
       - ./frontend/.env
       - ./backend/.env

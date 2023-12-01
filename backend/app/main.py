@@ -2,7 +2,7 @@ from flask import Flask
 from floodgate.flask import guard
 
 from app.db import db
-from app.internal.constants import DATABASE_URL,IDLE_TIMEOUT,SHUT_DOWN_ON_IDLE
+from app.internal.constants import DATABASE_URL, IDLE_TIMEOUT, SHUT_DOWN_ON_IDLE
 from app.internal.helpers import ip_resolver
 from app.internal.helpers.client_errors import method_not_allowed, not_found
 from app.middlewares import Middleware, cors, process_time
@@ -20,17 +20,16 @@ app.url_map.strict_slashes = False
 
 def exit_server():
     import os
-    if not SHUT_DOWN_ON_IDLE :
+
+    if not SHUT_DOWN_ON_IDLE:
         return
     print("[debug] Exiting Server (inactive)")
     os._exit(4)
 
 
 reset_timeout = Timeout(IDLE_TIMEOUT, exit_server)
-
-@app.before_first_request
-def create_db():
-    db.create_all()
+with app.app_context():
+     db.create_all()
 
 @app.before_request
 @guard(ban_time=5, ip_resolver=ip_resolver, request_count=50, per=15)

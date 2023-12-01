@@ -1,0 +1,12 @@
+:80 {
+	encode gzip
+	try_files {path} /
+	root * /site
+	file_server
+}
+
+:4000 {
+	
+	reverse_proxy http://localhost:8000
+	
+}

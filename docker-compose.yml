@@ -1,23 +1,18 @@
 version: "3"
 
 services:
-  frontend:
+  journo:
+    init: true
     restart: unless-stopped
     build:
-      context: ./frontend
+      context: .
       dockerfile: Dockerfile
     ports:
       - 127.0.0.1:11000:80
-    env_file: ./frontend/.env
-
-  backend:
-    restart: unless-stopped
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
       - 127.0.0.1:11001:8080
-    env_file: ./backend/.env
+    env_file:
+      - ./frontend/.env
+      - ./backend/.env
     depends_on:
       - db
 

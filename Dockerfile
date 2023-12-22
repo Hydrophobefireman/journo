@@ -44,6 +44,5 @@ WORKDIR /app
 COPY backend/ /app
 COPY ./run.sh /run.sh
 COPY ./Caddyfile /Caddyfile
-EXPOSE 80
-EXPOSE 4000
+EXPOSE 8000
 CMD ["bash","/run.sh"]

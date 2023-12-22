@@ -1,10 +1,7 @@
-const BASE = location.href.includes("localhost")
-  ? process.env.API_ENDPOINT_DEV
-  : //@ts-ignore
-    process.env.API_ENDPOINT_PROD;
+const BASE = new URL(process.env.API_ENDPOINT, location.href);
 
 function getURL(path: string) {
-  return new URL(path, BASE).href;
+  return new URL(`.${path}`, BASE).href;
 }
 
 export const loginRoute = getURL("/users/-/login");

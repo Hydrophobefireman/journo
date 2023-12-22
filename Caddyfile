@@ -1,11 +1,15 @@
-:80 {
-	encode gzip
-	try_files {path} /
+:8000 {
 	root * /site
 	file_server
-}
 
-:4000 {
-	encode gzip
-	reverse_proxy http://localhost:8080
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy http://localhost:8080 {
+			header_up -X-Forwarded-Proto
+			header_up -X-Forwarded-Protocol
+		}
+	}
+	handle /* {
+		try_files {path} /
+	}
 }

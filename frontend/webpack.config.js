@@ -6,7 +6,10 @@ const HTMLInlineCSSWebpackPlugin =
   require("html-inline-css-webpack-plugin").default;
 const webpack = require("webpack");
 
-const WebpackModuleNoModulePlugin = require("@hydrophobefireman/module-nomodule");
+const {
+  FontInlineWebpackPlugin,
+  HtmlWebpackEsmodulesPlugin,
+} = require("@hydrophobefireman/module-nomodule");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const {autoPrefixCSS} = require("catom/dist/css");
 const babel = require("./.babelconfig");
@@ -19,7 +22,7 @@ const isProd = mode === "production";
 const {outputDir, staticFilePrefix, inlineCSS, enableCatom, fonts} = uiConfig;
 require("dotenv").config();
 const browserslistConfig = browserslistToTargets(
-  browserslist("last 2 versions")
+  browserslist("last 2 versions"),
 );
 function prodOrDev(a, b) {
   return isProd ? a : b;
@@ -132,7 +135,7 @@ function getCfg(isLegacy) {
             parallel: Math.floor(require("os").cpus()?.length / 2) || 1,
           }),
         ],
-        []
+        [],
       ),
       splitChunks: {
         chunks: "all",
@@ -146,7 +149,7 @@ function getCfg(isLegacy) {
           compilation,
           files,
           tags,
-          options
+          options,
         ) {
           let css = uiConfig.enableCatom
             ? `<style>
@@ -180,7 +183,7 @@ function getCfg(isLegacy) {
             removeRedundantAttributes: true,
             removeComments: true,
           },
-          !1
+          !1,
         ),
       }),
       isProd &&
@@ -197,15 +200,11 @@ function getCfg(isLegacy) {
         filename: `${staticFilePrefix}/main-[contenthash].css`,
       }),
       isProd && inlineCSS && new HTMLInlineCSSWebpackPlugin({}),
-      new WebpackModuleNoModulePlugin({
+      new HtmlWebpackEsmodulesPlugin({
         mode: isLegacy ? "legacy" : "modern",
-        fonts,
       }),
-      new webpack.EnvironmentPlugin([
-        "NODE_ENV",
-        "API_ENDPOINT_DEV",
-        "API_ENDPOINT_PROD",
-      ]),
+      new FontInlineWebpackPlugin({fonts}),
+      new webpack.EnvironmentPlugin(["NODE_ENV", "API_ENDPOINT"]),
     ].filter(Boolean),
   };
 }

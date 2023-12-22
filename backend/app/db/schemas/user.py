@@ -7,6 +7,7 @@ from ..base import db
 
 
 class User(db.Model):
+    __tablename__ = "users"
     # pylint: disable=E1101
     id_: str = db.Column(TEXT, unique=True, nullable=False, primary_key=True)
     user: str = db.Column(db.String(50), unique=True, nullable=False)

@@ -34,10 +34,10 @@ COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
 # Install ffmpeg
 RUN apt-get update && apt-get install -y libpq-dev gcc python3-dev # Install libpq-dev for pg_config
-RUN pip install -U pip wheel
+RUN pip install -U pip wheel uv
 
 COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system --no-cache-dir -r requirements.txt
 
 WORKDIR /app
 
